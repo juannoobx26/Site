@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${'SobreRodas - ' + noticia.titulo}">SobreRodas - Notícia</title>
+    <link rel="stylesheet" th:href="@{/css/projeto.css}">
+    <link rel="stylesheet" th:href="@{/css/noticias.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+      .topbar .search-form {
+        flex-grow: 1;
+        display: flex;
+      }
+    </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <a th:href="@{/}" class="logo">Sobre<strong>Rodas</strong></a>
+      <form th:action="@{/pesquisa}" method="get" class="search-form">
+        <input class="search-input" type="search" name="q" placeholder="Buscar..." aria-label="Pesquisar" />
+      </form>
+      
+      <div class="actions" sec:authorize="!isAuthenticated()">
+        <a th:href="@{/usuario/cadastro}" class="btn ghost">Cadastrar</a>
+        <a th:href="@{/usuario/login}" class="btn">Entrar</a>
+      </div>
+      
+      <div class="actions" sec:authorize="isAuthenticated()">
+        <span th:text="${'Olá, ' + #authentication.principal.nome}" class="user-greeting"></span>
+        <a th:href="@{/usuario/perfil}" class="btn ghost">Perfil</a>
+        <a th:href="@{/admin/noticias}" class="btn" sec:authorize="hasRole('ADMIN')">
+          Admin
+        </a>
+        <a th:href="@{/usuario/logout}" class="btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
+      </div>
+    </div>
+
+    <nav class="container menu" aria-label="Menu principal">
+      <a th:href="@{/}">Notícias</a>
+      <a th:href="@{/eventos}">Eventos</a>
+      <a th:href="@{/comparativo}">Comparativos</a>
+    </nav>
+    <form id="logout-form" th:action="@{/usuario/logout}" method="post" style="display: none;"></form>
+  </header>
+
+    <main class="container">
+        <div class="noticia-detalhada">
+            <h1 th:text="${noticia.titulo}">Título da Notícia</h1>
+            
+            <div class="noticia-meta">
+                <span class="data" th:text="${noticia.data}">01/01/2023</span>
+            </div>
+            
+            <div class="noticia-imagem">
+                <img th:src="@{${noticia.imagem}}" th:alt="${noticia.titulo}" alt="Imagem da Notícia">
+            </div>
+            
+            <div class="noticia-conteudo">
+                <p th:text="${noticia.conteudo}">Conteúdo da notícia...</p>
+            </div>
+            
+            <div class="noticia-tags">
+                <span class="tag" th:if="${noticia.tag != null}" th:text="${noticia.tag}">Tag</span>
+                <span class="tag">Notícias</span>
+            </div>
+            
+            <div class="noticia-compartilhar">
+                <h3>Compartilhar</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+            
+            <div class="noticias-relacionadas">
+                <h3>Notícias Relacionadas</h3>
+                <div class="grid">
+                    <!-- Itera sobre a lista de notícias relacionadas -->
+                    <div class="card" th:each="rel : ${relacionadas}" th:if="${rel.id != noticia.id}">
+                        <a th:href="@{/noticia/{id}(id=${rel.id})}">
+                            <div class="card-img-related">
+                                <img th:src="@{${rel.imagem}}" th:alt="${rel.titulo}">
+                            </div>
+                            <div class="card-content">
+                                <h3 th:text="${rel.titulo}">Título da Notícia Relacionada</h3>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <div class="container foot">
+      <div><strong>SobreRodas</strong> — jornalismo automotivo independente.</div>
+      <small>© <span id="year"></span> SobreRodas</small>
+    </div>
+  </footer>
+
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

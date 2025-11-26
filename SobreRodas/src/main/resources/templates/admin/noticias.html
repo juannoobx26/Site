@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Notícias - Sobre Rodas</title>
+    <link rel="stylesheet" th:href="@{/css/projeto.css}">
+    <style>
+        .admin-container { padding: 2rem; max-width: 1200px; margin: auto; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .btn-primary { background-color: #c00; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        .btn-secondary { background-color: #333; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px; margin-right: 5px;}
+        .btn-danger { background-color: #8B0000; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 12px; border: 1px solid #333; text-align: left; }
+        th { background-color: #1f1f1f; }
+        .mensagem { padding: 1rem; margin-bottom: 1rem; border-radius: 5px; }
+        .mensagem-sucesso { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;}
+        .mensagem-erro { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;}
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container topbar">
+          <a th:href="@{/}" class="logo">Sobre<strong>Rodas</strong></a>
+          <div class="actions">
+            <a th:href="@{/}" class="btn ghost">Voltar ao Site</a>
+            <a th:href="@{/usuario/logout}" class="btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
+          </div>
+        </div>
+        <form id="logout-form" th:action="@{/usuario/logout}" method="post" style="display: none;"></form>
+    </header>
+
+    <main class="admin-container">
+        <div class="admin-header">
+            <h1>Gerenciar Notícias</h1>
+            <a th:href="@{/admin/noticias/nova}" class="btn-primary">Nova Notícia</a>
+        </div>
+
+        <div th:if="${mensagemSucesso}" class="mensagem mensagem-sucesso" th:text="${mensagemSucesso}"></div>
+        <div th:if="${mensagemErro}" class="mensagem mensagem-erro" th:text="${mensagemErro}"></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Data</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="noticia : ${noticias}">
+                    <td th:text="${noticia.id}">1</td>
+                    <td th:text="${noticia.titulo}">Título da Notícia</td>
+                    <td th:text="${noticia.data}">01/01/2024</td>
+                    <td>
+                        <a th:href="@{/admin/noticias/editar/{id}(id=${noticia.id})}" class="btn-secondary">Editar</a>
+                        <a th:href="@{/admin/noticias/deletar/{id}(id=${noticia.id})}" class="btn-danger" onclick="return confirm('Tem certeza que deseja deletar esta notícia?');">Deletar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>

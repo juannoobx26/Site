@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title th:text="'Busca por: ' + ${termo} + ' — SobreRodas'">SobreRodas — Resultados da Busca</title>
+  <link rel="stylesheet" th:href="@{/css/projeto.css}">
+  <link rel="stylesheet" th:href="@{/css/noticias.css}">
+  <style>
+    .topbar .search-form {
+      flex-grow: 1;
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <!-- TOPO (Reutilizado de outras páginas) -->
+  <header>
+    <div class="container topbar">
+      <a th:href="@{/}" class="logo">Sobre<strong>Rodas</strong></a>
+      <form th:action="@{/pesquisa}" method="get" class="search-form">
+        <input class="search-input" type="search" name="q" placeholder="Buscar..." aria-label="Pesquisar" th:value="${termo}" />
+      </form>
+      
+      <div class="actions" sec:authorize="!isAuthenticated()">
+        <a th:href="@{/usuario/cadastro}" class="btn ghost">Cadastrar</a>
+        <a th:href="@{/usuario/login}" class="btn">Entrar</a>
+      </div>
+      
+      <div class="actions" sec:authorize="isAuthenticated()">
+        <span th:text="${'Olá, ' + #authentication.principal.nome}" class="user-greeting"></span>
+        <a th:href="@{/usuario/perfil}" class="btn ghost">Perfil</a>
+        <a th:href="@{/admin/noticias}" class="btn" sec:authorize="hasRole('ADMIN')">
+          Admin
+        </a>
+        <a th:href="@{/usuario/logout}" class="btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
+      </div>
+    </div>
+
+    <nav class="container menu" aria-label="Menu principal">
+      <a th:href="@{/}">Notícias</a>
+      <a th:href="@{/eventos}">Eventos</a>
+      <a th:href="@{/comparativo}">Comparativos</a>
+    </nav>
+
+    <form id="logout-form" th:action="@{/usuario/logout}" method="post" style="display: none;"></form>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="container">
+    <section class="grid">
+      <h2>Resultados da busca por: "<span th:text="${termo}"></span>"</h2>
+
+      <!-- Mensagem para quando não há resultados -->
+      <div th:if="${#lists.isEmpty(resultados)}" class="no-results" style="text-align: center; padding: 40px; grid-column: 1 / -1;">
+        <p>Nenhuma notícia encontrada para o termo pesquisado.</p>
+        <p>Tente buscar por outras palavras-chave.</p>
+      </div>
+
+      <!-- Grid de resultados -->
+      <a th:each="noticia : ${resultados}" th:href="@{/noticia/{id}(id=${noticia.id})}" class="card-link" style="text-decoration: none;">
+        <article class="card">
+          <img th:src="@{${noticia.imagem}}" th:alt="${noticia.titulo}" style="height: 180px; object-fit: cover;">
+          <div class="content">
+            <span class="tag" th:text="${noticia.tag}">Tag</span>
+            <h3 th:text="${noticia.titulo}" style="color: #333;">Título da Notícia</h3>
+            <p th:text="${noticia.resumo}" style="color: #666;">Resumo da notícia.</p>
+          </div>
+        </article>
+      </a>
+    </section>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <div class="container foot">
+      <div><strong>SobreRodas</strong> — jornalismo automotivo independente.</div>
+      <small>© <span id="year"></span> SobreRodas</small>
+    </div>
+  </footer>
+
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

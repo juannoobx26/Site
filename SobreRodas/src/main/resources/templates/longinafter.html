@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+// ... existing code ...
+  <header>
+    <div class="container topbar">
+      <a th:href="@{/}" class="logo">Sobre<strong>Rodas</strong></a>
+
+      <input class="search-input" type="search" placeholder="Buscar carros, testes, comparativos…" aria-label="Pesquisar">
+
+      <div class="actions" sec:authorize="!isAuthenticated()">
+        <a th:href="@{/usuario/cadastro}" class="btn ghost">Cadastrar</a>
+        <a th:href="@{/usuario/login}" class="btn">Entrar</a>
+      </div>
+      
+      <div class="actions" sec:authorize="isAuthenticated()">
+        <span th:text="${'Olá, ' + #authentication.principal.nome}" class="user-greeting"></span>
+        <form th:action="@{/usuario/logout}" method="post" style="display: inline;">
+            <button type="submit" class="btn">Sair</button>
+        </form>
+      </div>
+    </div>
+
+    <nav class="container menu" aria-label="Menu principal">

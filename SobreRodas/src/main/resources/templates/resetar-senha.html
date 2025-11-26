@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SobreRodas — Redefinir Senha</title>
+  <link rel="stylesheet" th:href="@{/css/projeto.css}">
+  <!-- Estilos reutilizados do login/cadastro para consistência -->
+  <style>
+    .form-container { max-width: 450px; margin: 60px auto; background: #16181c; border-radius: 12px; padding: 30px; border: 1px solid rgba(255,255,255,0.05); }
+    .form-container h1 { text-align: center; margin-bottom: 24px; color: #eaf6ff; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; color: #b8d3e8; }
+    .form-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: #0f1318; color: #eaf6ff; }
+    .form-btn { width: 100%; padding: 12px; margin-top: 10px; }
+    .alert { padding: 12px; border-radius: 8px; margin-bottom: 20px; }
+    .alert-danger { background: rgba(220, 53, 69, 0.1); color: #ff6b6b; border: 1px solid rgba(220, 53, 69, 0.2); }
+    .alert-info { background: rgba(23, 162, 184, 0.1); color: #39bfff; border: 1px solid rgba(23, 162, 184, 0.2); }
+  </style>
+</head>
+<body>
+  <!-- TOPO -->
+  <header>
+    <div class="container topbar">
+      <a th:href="@{/}" class="logo">Sobre<strong>Rodas</strong></a>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="container">
+    <div class="form-container">
+      <h1>Redefinir Senha</h1>
+
+      <div th:if="${mensagem}" class="alert alert-info" th:text="${mensagem}"></div>
+      <div th:if="${mensagemErro}" class="alert alert-danger" th:text="${mensagemErro}"></div>
+
+      <form th:action="@{/usuario/resetar-senha}" method="post">
+        <!-- Campo oculto para enviar o token de volta para o servidor -->
+        <input type="hidden" name="token" th:value="${token}" />
+        
+        <div class="form-group">
+          <label for="senha">Nova Senha</label>
+          <input type="password" id="senha" name="senha" required autofocus />
+        </div>
+        
+        <div class="form-group">
+          <label for="confirmarSenha">Confirmar Nova Senha</label>
+          <input type="password" id="confirmarSenha" name="confirmarSenha" required />
+        </div>
+        
+        <button type="submit" class="btn form-btn">Salvar Nova Senha</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <div class="container foot">
+      <div><strong>SobreRodas</strong> — jornalismo automotivo independente.</div>
+      <small>© <span id="year"></span> SobreRodas</small>
+    </div>
+  </footer>
+
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

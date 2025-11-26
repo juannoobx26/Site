@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SobreRodas — Notícias</title>
+  <link rel="stylesheet" th:href="@{/css/projeto.css}">
+  <link rel="stylesheet" th:href="@{/css/noticias.css}">
+  <style>
+    .topbar .search-form {
+      flex-grow: 1;
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <!-- TOPO -->
+  <header>
+    <div class="container topbar">
+      <a th:href="@{/}" class="logo">Sobre<strong>Rodas</strong></a>
+
+      <form th:action="@{/pesquisa}" method="get" class="search-form">
+        <input class="search-input" type="search" name="q" placeholder="Buscar carros, testes, comparativos…" aria-label="Pesquisar" />
+      </form>
+      
+      <div class="actions" sec:authorize="!isAuthenticated()">
+        <a th:href="@{/usuario/cadastro}" class="btn ghost">Cadastrar</a>
+        <a th:href="@{/usuario/login}" class="btn">Entrar</a>
+      </div>
+      
+      <div class="actions" sec:authorize="isAuthenticated()">
+        <span th:text="${'Olá, ' + #authentication.principal.nome}" class="user-greeting"></span>
+        <a th:href="@{/usuario/perfil}" class="btn ghost">Perfil</a>
+        <a th:href="@{/admin/noticias}" class="btn" sec:authorize="hasRole('ADMIN')">
+          Admin
+        </a>
+        <a th:href="@{/usuario/logout}" class="btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
+      </div>
+    </div>
+
+    <nav class="container menu" aria-label="Menu principal">
+      <a th:href="@{/}">Notícias</a>
+      <a th:href="@{/eventos}">Eventos</a>
+      <a th:href="@{/comparativo}">Comparativos</a>
+    </nav>
+
+    <form id="logout-form" th:action="@{/usuario/logout}" method="post" style="display: none;">
+        <!-- CSRF token will be added automatically by Thymeleaf -->
+    </form>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="destaques">
+      <article class="hero-card" th:if="${noticiaDestaque != null}">
+       <a th:href="@{/noticia/{id}(id=${noticiaDestaque.id})}">
+         <img class="hero-img" th:src="@{${noticiaDestaque.imagem}}" th:alt="${noticiaDestaque.titulo}">
+         <div class="hero-content">
+           <span class="badge" th:text="${noticiaDestaque.tag}">Destaque</span>
+           <h1 id="destaques" th:text="${noticiaDestaque.titulo}">Título da Notícia Principal</h1>
+           <p class="desc" th:text="${noticiaDestaque.resumo}">Resumo da notícia principal.</p>
+           <div class="meta" th:text="${noticiaDestaque.data + ' • Por ' + noticiaDestaque.autor}">Metadados</div>
+         </div>
+       </a>
+      </article>
+
+      <aside class="side">
+        <div class="list">
+          <h2>Mais lidas</h2>
+          <!-- Iterando sobre a lista de mais lidas -->
+          <div class="item" th:each="noticia : ${maisLidas}">
+            <a th:href="@{/noticia/{id}(id=${noticia.id})}" th:text="${noticia.titulo}">Título da Notícia</a>
+          </div>
+        </div>
+
+        <div class="cta">
+          <h3>Receba as melhores matérias</h3>
+          <form onsubmit="event.preventDefault(); alert('Obrigado! Você foi inscrito.');">
+            <input type="email" placeholder="Seu e-mail" aria-label="Seu e-mail" required>
+            <button class="btn" type="submit">Assinar</button>
+          </form>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ULTIMAS NOTICIAS -->
+    <section class="grid" aria-labelledby="ultimas">
+      <h2 id="ultimas">Últimas Notícias</h2>
+
+      <!-- Iterando sobre a lista de últimas notícias -->
+      <a th:each="noticia : ${ultimasNoticias}" th:href="@{/noticia/{id}(id=${noticia.id})}" class="card-link">
+        <article class="card">
+          <img th:src="@{${noticia.imagem}}" th:alt="${noticia.titulo}">
+          <div class="content">
+            <span class="tag" th:text="${noticia.tag}">Tag</span>
+            <h3 th:text="${noticia.titulo}">Título da Notícia</h3>
+          </div>
+        </article>
+      </a>
+    </section>
+
+    <!-- TESTES E AVALIAÇÕES -->
+    <section class="grid">
+      <h2>Testes e Avaliações</h2>
+      <a th:each="noticia : ${testesEAvaliacoes}" th:href="@{/noticia/{id}(id=${noticia.id})}" class="card-link">
+        <article class="card">
+          <img th:src="@{${noticia.imagem}}" th:alt="${noticia.titulo}">
+          <div class="content">
+            <span class="tag" th:text="${noticia.tag}">Tag</span>
+            <h3 th:text="${noticia.titulo}">Título da Notícia</h3>
+          </div>
+        </article>
+      </a>
+    </section>
+
+    <!-- COMPARATIVOS -->
+    <section class="grid">
+      <h2>Comparativos</h2>
+      <a th:each="noticia : ${comparativosHome}" th:href="@{/noticia/{id}(id=${noticia.id})}" class="card-link">
+        <article class="card">
+          <img th:src="@{${noticia.imagem}}" th:alt="${noticia.titulo}">
+          <div class="content">
+            <span class="tag" th:text="${noticia.tag}">Tag</span>
+            <h3 th:text="${noticia.titulo}">Título da Notícia</h3>
+          </div>
+        </article>
+      </a>
+    </section>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <div class="container foot">
+      <div><strong>SobreRodas</strong> — jornalismo automotivo independente.</div>
+      <small>© <span id="year"></span> SobreRodas</small>
+    </div>
+  </footer>
+
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

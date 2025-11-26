@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SobreRodas — Meu Perfil</title>
+  <link rel="stylesheet" th:href="@{/css/projeto.css}">
+  <style>
+    .topbar .search-form {
+      flex-grow: 1;
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <a th:href="@{/}" class="logo">Sobre<strong>Rodas</strong></a>
+      <!-- A busca agora é um formulário para funcionar corretamente -->
+      <form th:action="@{/pesquisa}" method="get" class="search-form">
+        <input class="search-input" type="search" name="q" placeholder="Buscar..." aria-label="Pesquisar" />
+      </form>
+      <div class="actions" sec:authorize="isAuthenticated()">
+        <span th:text="${'Olá, ' + #authentication.principal.nome}" class="user-greeting"></span>
+        <a th:href="@{/usuario/perfil}" class="btn ghost">Perfil</a>
+        <a th:href="@{/usuario/logout}" class="btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
+      </div>
+    </div>
+
+    <nav class="container menu" aria-label="Menu principal">
+      <a th:href="@{/}">Notícias</a>
+      <a th:href="@{/eventos}">Eventos</a>
+      <a th:href="@{/comparativo}">Comparativos</a>
+    </nav>
+
+    <form id="logout-form" th:action="@{/usuario/logout}" method="post" style="display: none;"></form>
+  </header>
+
+  <main class="container">
+    <div class="form-container" style="margin-top: 40px;">
+        <h2>Meu Perfil</h2>
+        <div th:if="${usuario != null}">
+            <p><strong>Nome:</strong> <span th:text="${usuario.nome}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${usuario.email}"></span></p>
+            <!-- Adicione mais informações do perfil aqui se desejar -->
+        </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container foot">
+      <div><strong>SobreRodas</strong> — jornalismo automotivo independente.</div>
+      <small>© <span id="year"></span> SobreRodas</small>
+    </div>
+  </footer>
+
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

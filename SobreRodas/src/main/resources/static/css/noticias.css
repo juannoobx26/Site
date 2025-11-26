@@ -1,0 +1,19 @@
+/* Estilos para os cards e links de notícias */
+
+/* Remove o sublinhado dos links dentro dos cards de notícia */
+.hero-card a,      /* Notícia em destaque na home */
+.side .item a,     /* Lista "Mais lidas" na home */
+.card-link,        /* Cards de notícias nas seções da home e outras páginas */
+.card a           /* Cards de notícias relacionadas na página da notícia */
+{
+    text-decoration: none; /* Remove a linha de baixo */
+    color: inherit;       /* Faz o link herdar a cor do texto do elemento pai */
+}
+
+/* Adiciona um sublinhado sutil apenas quando o mouse passa por cima, para indicar que é clicável */
+.hero-card a:hover,
+.side .item a:hover,
+.card-link:hover,
+.card a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SobreRodas — Login</title>
+  <link rel="stylesheet" th:href="@{/css/projeto.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    .login-container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: #16181c;
+      border-radius: 12px;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .login-container h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #eaf6ff;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #b8d3e8;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: #0f1318;
+      color: #eaf6ff;
+    }
+    
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+    }
+    
+    .register-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #98b2c6;
+    }
+    
+    .register-link a {
+      color: #39bfff;
+      text-decoration: none;
+    }
+    
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+    
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .alert-danger {
+      background: rgba(220, 53, 69, 0.1);
+      color: #ff6b6b;
+      border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+    
+    .alert-success {
+      background: rgba(40, 167, 69, 0.1);
+      color: #51cf66;
+      border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+    .topbar .search-form {
+      flex-grow: 1;
+      display: flex;
+    }
+
+    .password-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .password-wrapper i {
+        position: absolute;
+        right: 15px;
+        cursor: pointer;
+        color: #98b2c6;
+    }
+  </style>
+</head>
+<body>
+  <!-- TOPO -->
+  <header>
+    <div class="container topbar">
+      <a th:href="@{/}" class="logo">Sobre<strong>Rodas</strong></a>
+      
+      <div class="actions">
+        <a th:href="@{/usuario/cadastro}" class="btn ghost">Cadastrar</a>
+        <a th:href="@{/usuario/login}" class="btn">Entrar</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="container">
+    <div class="login-container">
+      <h1>Login</h1>
+      
+      <div th:if="${param.error}" class="alert alert-danger">
+        Email ou senha inválidos.
+      </div>
+      
+      <div th:if="${param.logout}" class="alert alert-success">
+        Você saiu do sistema.
+      </div>
+      
+      <div th:if="${mensagemSucesso}" class="alert alert-success" th:text="${mensagemSucesso}"></div>
+      <div th:if="${mensagemErro}" class="alert alert-danger" th:text="${mensagemErro}"></div>
+      
+      <form th:action="@{/usuario/login}" method="post">
+        <div class="form-group">
+          <label for="username">Email</label>
+          <input type="email" id="username" name="username" required autofocus>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <div class="password-wrapper">
+            <input type="password" id="password" name="password" required>
+            <i class="fa-solid fa-eye" id="togglePassword"></i>
+          </div>
+        </div>
+        
+        <div style="text-align: right; font-size: 0.85rem; margin-bottom: 15px;">
+            <a th:href="@{/usuario/esqueci-senha}" style="color: #98b2c6; text-decoration: none;">Esqueci minha senha</a>
+        </div>
+
+        <button type="submit" class="btn login-btn">Entrar</button>
+      </form>
+      
+      <div class="register-link">
+        Não tem uma conta? <a th:href="@{/usuario/cadastro}">Cadastre-se</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <div class="container foot">
+      <div><strong>SobreRodas</strong> — jornalismo automotivo independente.</div>
+      <small>© <span id="year"></span> SobreRodas</small>
+    </div>
+  </footer>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const togglePassword = document.querySelector('#togglePassword');
+      const password = document.querySelector('#password');
+
+      if (togglePassword && password) {
+        togglePassword.addEventListener('click', function () {
+          // Alterna o tipo do input
+          const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+          password.setAttribute('type', type);
+          // Alterna o ícone
+          this.classList.toggle('fa-eye');
+          this.classList.toggle('fa-eye-slash');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

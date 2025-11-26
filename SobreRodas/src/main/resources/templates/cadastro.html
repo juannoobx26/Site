@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SobreRodas — Cadastro</title>
+  <link rel="stylesheet" th:href="@{/css/projeto.css}">
+  <link rel="stylesheet" th:href="@{/css/noticias.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    .cadastro-container {
+      max-width: 500px;
+      margin: 60px auto;
+      background: #16181c;
+      border-radius: 12px;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .cadastro-container h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #eaf6ff;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #b8d3e8;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: #0f1318;
+      color: #eaf6ff;
+    }
+
+    .password-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .password-wrapper i {
+        position: absolute;
+        right: 15px;
+        cursor: pointer;
+        color: #98b2c6;
+    }
+    
+    .form-error {
+      color: #ff6b6b;
+      font-size: 0.85rem;
+      margin-top: 5px;
+    }
+    
+    .cadastro-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+    }
+    
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #98b2c6;
+    }
+    
+    .login-link a {
+      color: #39bfff;
+      text-decoration: none;
+    }
+    
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+    
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .alert-danger {
+      background: rgba(220, 53, 69, 0.1);
+      color: #ff6b6b;
+      border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+    .topbar .search-form {
+      flex-grow: 1;
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <!-- TOPO -->
+  <header>
+    <div class="container topbar">
+      <a th:href="@{/}" class="logo">Sobre<strong>Rodas</strong></a>
+      
+      <div class="actions">
+        <a th:href="@{/usuario/cadastro}" class="btn ghost">Cadastrar</a>
+        <a th:href="@{/usuario/login}" class="btn">Entrar</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="container">
+    <div class="cadastro-container">
+      <h1>Cadastro</h1>
+      
+      <div class="alert alert-danger" role="alert" th:if="${mensagemErro}">
+        <p th:text="${mensagemErro}"></p>
+      </div>
+      
+      <form th:action="@{/usuario/cadastro}" th:object="${usuario}" method="post">
+        <div class="form-group">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" th:field="*{nome}" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" th:field="*{email}" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <div class="password-wrapper">
+            <input type="password" id="senha" th:field="*{senha}" class="form-control" required>
+            <i class="fa-solid fa-eye" id="togglePassword"></i>
+          </div>
+        </div>
+
+        <button type="submit" class="btn cadastro-btn">Cadastrar</button>
+      </form>
+      
+      <div class="login-link">
+        Já tem uma conta? <a th:href="@{/usuario/login}">Faça login</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <div class="container foot">
+      <div><strong>SobreRodas</strong> — jornalismo automotivo independente.</div>
+      <small>© <span id="year"></span> SobreRodas</small>
+    </div>
+  </footer>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const togglePassword = document.querySelector('#togglePassword');
+      const password = document.querySelector('#senha');
+
+      togglePassword.addEventListener('click', function (e) {
+        // Alterna o tipo do input entre 'password' e 'text'
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        
+        // Alterna a classe do ícone entre 'fa-eye' e 'fa-eye-slash'
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+      });
+    });
+  </script>
+</body>
+</html>

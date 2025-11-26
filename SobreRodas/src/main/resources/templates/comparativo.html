@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SobreRodas — Comparativos</title>
+  <link rel="stylesheet" th:href="@{/css/projeto.css}">
+  <link rel="stylesheet" th:href="@{/css/noticias.css}">
+  <style>
+    /* Garante que a barra de pesquisa ocupe o espaço disponível */
+    .topbar .search-form {
+      flex-grow: 1;
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container topbar">
+      <a th:href="@{/}" class="logo">Sobre<strong>Rodas</strong></a>
+      <form th:action="@{/pesquisa}" method="get" class="search-form">
+        <input class="search-input" type="search" name="q" placeholder="Buscar comparativos…" aria-label="Pesquisar comparativos" />
+      </form>
+      
+      <div class="actions" sec:authorize="!isAuthenticated()">
+        <a th:href="@{/usuario/cadastro}" class="btn ghost">Cadastrar</a>
+        <a th:href="@{/usuario/login}" class="btn">Entrar</a>
+      </div>
+      
+      <div class="actions" sec:authorize="isAuthenticated()">
+        <span th:text="${'Olá, ' + #authentication.principal.nome}" class="user-greeting"></span>
+        <a th:href="@{/usuario/perfil}" class="btn ghost">Perfil</a>
+        <a th:href="@{/admin/noticias}" class="btn" sec:authorize="hasRole('ADMIN')">
+          Admin
+        </a>
+        <a th:href="@{/usuario/logout}" class="btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
+      </div>
+    </div>
+
+    <nav class="container menu" aria-label="Menu principal">
+      <a th:href="@{/}">Notícias</a>
+      <a th:href="@{/eventos}">Eventos</a>
+      <a th:href="@{/comparativo}">Comparativos</a>
+    </nav>
+
+    <form id="logout-form" th:action="@{/usuario/logout}" method="post" style="display: none;">
+        <!-- CSRF token will be added automatically by Thymeleaf -->
+    </form>
+  </header>
+
+  <main class="container">
+    <section class="grid">
+      <h2>Comparativos Recentes</h2>
+
+      <a th:each="comp : ${comparativos}" th:href="@{/noticia/{id}(id=${comp.id})}" class="card-link">
+        <article class="card">
+          <img th:src="@{${comp.imagem}}" th:alt="${comp.titulo}">
+          <div class="content">
+            <span class="tag" th:text="${comp.tag}">Tag</span>
+            <h3 th:text="${comp.titulo}">Título do Comparativo</h3>
+            <p th:text="${comp.resumo}">Resumo do comparativo.</p>
+          </div>
+        </article>
+      </a>
+
+    </section>
+  </main>
+
+  <footer>
+    <div class="container foot">
+      <div><strong>SobreRodas</strong> — jornalismo automotivo independente.</div>
+      <small>© <span id="year"></span> SobreRodas</small>
+    </div>
+  </footer>
+
+  <script th:src="@{/js/main.js}"></script>
+</body>
+</html>
